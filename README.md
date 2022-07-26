@@ -4,6 +4,6 @@
 <br>
 各プログラムは以下のページと対応しています。<br>
 <br>
-| name | page to page |
-| ---- | ------------ |
-| stage1.ipynb | pp.3-66 |
+| name         | page to page |
+| ------------ | ------------ |
+| stage1.ipynb | pp.3-66      |
