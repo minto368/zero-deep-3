@@ -7,5 +7,5 @@
 
 |Name|Page to Page|
 |:--:|:--:|
-|stage1.ipynb|pp.3-66|
+|[stage1.ipynb](/stage1.ipynb)|pp.3-66|
 |stage2.ipynb|pp.3-66|
