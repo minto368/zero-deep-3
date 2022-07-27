@@ -1,10 +1,13 @@
 # zerodeep
 
-- ゼロから作るDeep Learning3 フレームワーク編のレポジトリ
+ゼロから作るDeep Learning3 フレームワーク編のレポジトリ
 <br>
-【公式リポジトリ】<br>
+## 公式リポジトリ
 https://github.com/oreilly-japan/deep-learning-from-scratch-3
 <br>
+<br>
+
+## ファイル構成
 各プログラムは以下のページと対応しています。<br>
 
 |Name|Page to Page|
