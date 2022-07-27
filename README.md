@@ -5,7 +5,6 @@
 ## 公式リポジトリ
 https://github.com/oreilly-japan/deep-learning-from-scratch-3
 <br>
-<br>
 
 ## ファイル構成
 各プログラムは以下のページと対応しています。<br>
