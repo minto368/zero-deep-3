@@ -4,7 +4,7 @@
 <br>
 
 ## 実行環境
-Python 3.7.10
+Python 3.7.10<br>
 numpy == 1.20.3<br>
 matplotlib == 3.5.1<br>
 
