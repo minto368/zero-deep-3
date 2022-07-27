@@ -2,6 +2,9 @@
 
 - ゼロから作るDeep Learning3 フレームワーク編のレポジトリ
 <br>
+公式リポジトリ
+https://github.com/oreilly-japan/deep-learning-from-scratch-3
+
 各プログラムは以下のページと対応しています。<br>
 <br>
 
