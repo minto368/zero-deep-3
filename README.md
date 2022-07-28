@@ -1,6 +1,6 @@
 # zerodeep
 
-ゼロから作るDeep Learning3 フレームワーク編のレポジトリ
+ゼロから作るDeep Learning3 フレームワーク編の学習メモ
 <br>
 
 ## 実行環境
