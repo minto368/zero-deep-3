@@ -33,12 +33,11 @@ class Variable_:
             if f not in seen_set:
                 funcs.append(f)
                 seen_set.add(f)
-                funcs.sort(key=lambda x: x.generation)
 
         add_func(self.creator)
 
         while funcs:
-            f = funcs.pop()
+            f = funcs.pop(funcs.index(max(funcs, key=lambda x:x.generation)))
             gys = [output.grad for output in f.outputs]  # output is weakref
             gxs = f.backward(*gys)
             if not isinstance(gxs, tuple):
@@ -96,10 +95,10 @@ class Square(Function_):
 def square(x):
     return Square()(x)
 
-@profile
-def test_before():
+@profile(precision=4)
+def test_before(size):
     for i in range(10):
-        x = Variable_(np.random.randn(10000))  # big data
+        x = Variable_(np.random.randn(size))  # big data
         y = square(square(square(x)))
         
 # weakref適用後
@@ -133,12 +132,11 @@ class Variable:
             if f not in seen_set:
                 funcs.append(f)
                 seen_set.add(f)
-                funcs.sort(key=lambda x: x.generation)
 
         add_func(self.creator)
 
         while funcs:
-            f = funcs.pop()
+            f = funcs.pop(funcs.index(max(funcs, key=lambda x:x.generation)))
             gys = [output().grad for output in f.outputs]  # output is weakref
             gxs = f.backward(*gys)
             if not isinstance(gxs, tuple):
@@ -189,14 +187,15 @@ class Square(Function):
 def square(x):
     return Square()(x)
 
-@profile
-def test_after():
+@profile(precision=4)
+def test_after(size):
     for i in range(10):
-        x = Variable(np.random.randn(10000))  # big data
+        x = Variable(np.random.randn(size))  # big data
         y = square(square(square(x)))
 
 if __name__ == '__main__':
+    size = 10000
     print('weakref適用前')
-    test_before()
+    test_before(size)
     print('weakref適用後')
-    test_after()
+    test_after(size)
