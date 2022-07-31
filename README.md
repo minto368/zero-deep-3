@@ -7,6 +7,7 @@
 Python 3.7.10<br>
 numpy == 1.20.3<br>
 matplotlib == 3.5.1<br>
+memory-profiler == 0.60.0<br>
 
 ## 公式リポジトリ
 https://github.com/oreilly-japan/deep-learning-from-scratch-3
@@ -14,6 +15,8 @@ https://github.com/oreilly-japan/deep-learning-from-scratch-3
 
 ## ファイル構成
 各プログラムは以下のページと対応しています。<br>
+ステージ２以降では、一部pythonファイルで実行しています。<br>
+コードはsrcディレクトリにまとめてあります。<br>
 
 |ファイル名|ページ数|ステップ|
 |:--:|:--:|:--:|
