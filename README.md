@@ -16,11 +16,12 @@ https://github.com/oreilly-japan/deep-learning-from-scratch-3
 ## ファイル構成
 各プログラムは以下のページと対応しています。<br>
 前のステップで出てきたクラス等の宣言は省略しているため、途中から実行するとエラーが起きます。<br>
-全てを実行することをお勧めします。<br>
+全てを実行してください。<br>
 
 
 |ファイル名|ページ数|ステップ|
 |:--:|:--:|:--:|
 |[stage1.ipynb](/stage1.ipynb)|pp.3-66|ステップ1~ステップ10|
 |[stage2.ipynb](/stage2.ipynb)|pp.69-177|ステップ11~ステップ24|
+|[stage3.ipynb](/stage3.ipynb)|pp.69-177|ステップ25~ステップ36|
 
