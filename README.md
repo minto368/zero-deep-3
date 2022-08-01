@@ -17,7 +17,7 @@ https://github.com/oreilly-japan/deep-learning-from-scratch-3
 各プログラムは以下のページと対応しています。<br>
 前のステップで出てきたクラス等の宣言は省略しているため、途中から実行するとエラーが起きます。<br>
 全てを実行することをお勧めします。<br>
-ステップ24以降では、[公式リポジトリ](https://github.com/oreilly-japan/deep-learning-from-scratch-3)のdezeroを使用しています。実行するときは、dezeroを作業ディレクトリ内に入れてください。
+
 
 |ファイル名|ページ数|ステップ|
 |:--:|:--:|:--:|
