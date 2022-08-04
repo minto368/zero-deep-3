@@ -4,10 +4,10 @@
 <br>
 
 ## 実行環境
-Python 3.7.10<br>
-numpy == 1.20.3<br>
-matplotlib == 3.5.1<br>
-memory-profiler == 0.60.0<br>
+- Python 3.7.10
+- numpy 1.20.3
+- matplotlib 3.5.1
+- memory-profiler 0.60.0
 
 ## 公式リポジトリ
 https://github.com/oreilly-japan/deep-learning-from-scratch-3
