@@ -1,4 +1,4 @@
-# zerodeep
+# zerodeep3
 
 ゼロから作るDeep Learning3 フレームワーク編の学習メモ
 <br>
