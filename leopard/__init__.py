@@ -14,15 +14,15 @@ if is_simple_core:
 
 else:
     from leopard.core import Variable
-    from leopard.core import Parameter
+    #from leopard.core import Parameter
     from leopard.core import Function
     from leopard.core import using_config
     from leopard.core import no_grad
-    from leopard.core import test_mode
+    #from leopard.core import test_mode
     from leopard.core import as_array
     from leopard.core import as_variable
     from leopard.core import setup_variable
-    from leopard.core import Config
+    #from leopard.core import Config
     #from leopard.layers import Layer
     #from leopard.models import Model
     #from leopard.datasets import Dataset

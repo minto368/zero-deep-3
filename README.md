@@ -23,5 +23,5 @@ https://github.com/oreilly-japan/deep-learning-from-scratch-3
 |:--:|:--:|:--:|
 |[stage1.ipynb](/stage1.ipynb)|pp.3-66|ステップ1~ステップ10|
 |[stage2.ipynb](/stage2.ipynb)|pp.69-177|ステップ11~ステップ24|
-|[stage3.ipynb](/stage3.ipynb)|pp.69-177|ステップ25~ステップ36|
-
+|[stage3-1.ipynb](/stage3-1.ipynb)|pp.69-216|ステップ25~ステップ29|
+|[stage3-2.ipynb](/stage3-2.ipynb)|pp.217-265|ステップ30~ステップ36|

@@ -1,4 +1,5 @@
 import weakref
+from copy import copy
 import numpy as np
 import contextlib
 
@@ -56,7 +57,14 @@ class Variable:
 
     def __len__(self):
         return len(self.data)
+    
+    # .copy()の返却値
+    def copy(self):
+        return copy(self)
 
+    def to_numpy(self):
+        return np.array(self.data)
+    
     # print関数で出力される文字列をカスタマイズ
     def __repr__(self):
         if self.data is None:
@@ -91,7 +99,7 @@ class Variable:
             f = funcs.pop(funcs.index(max(funcs, key=lambda x:x.generation)))
             gys = [output().grad for output in f.outputs]  # output is weakref
             
-            with using_config('enable_backdrop', create_graph):
+            with using_config('enable_backprop', create_graph):
                 gxs = f.backward(*gys)
                 if not isinstance(gxs, tuple):
                     gxs = (gxs,)
