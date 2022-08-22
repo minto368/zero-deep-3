@@ -59,11 +59,13 @@ class Variable:
         return len(self.data)
     
     # .copy()の返却値
+    """
     def copy(self):
         return copy(self)
 
     def to_numpy(self):
         return np.array(self.data)
+    """
     
     # print関数で出力される文字列をカスタマイズ
     def __repr__(self):
