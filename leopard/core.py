@@ -1,14 +1,17 @@
-import weakref
-from copy import copy
-import numpy as np
 import contextlib
+import weakref
+
+import leopard
+import numpy as np
+
 
 # =============================================================================
 # Config
 # =============================================================================
 class Config:
     enable_backprop = True
-    
+
+
 @contextlib.contextmanager
 def using_config(name, value):
     old_value = getattr(Config, name)
@@ -20,18 +23,19 @@ def using_config(name, value):
 
 
 def no_grad():
-    return using_config('enable_backprop', False)
+    return using_config("enable_backprop", False)
+
 
 # =============================================================================
 # Variable / Function
 # =============================================================================
 class Variable:
-    __array_priority__ = 200 # 演算子の優先度を上げる
+    __array_priority__ = 200  # 演算子の優先度を上げる
 
     def __init__(self, data, name=None):
         if data is not None:
             if not isinstance(data, np.ndarray):
-                raise TypeError('{} is not supported'.format(type(data)))
+                raise TypeError("{} is not supported".format(type(data)))
 
         self.data = data
         self.name = name
@@ -57,23 +61,14 @@ class Variable:
 
     def __len__(self):
         return len(self.data)
-    
-    # .copy()の返却値
-    """
-    def copy(self):
-        return copy(self)
 
-    def to_numpy(self):
-        return np.array(self.data)
-    """
-    
     # print関数で出力される文字列をカスタマイズ
     def __repr__(self):
         if self.data is None:
-            return 'variable(None)'
+            return "variable(None)"
         # 複数行にわたって出力する場合に、数値の開始位置を揃えるため空白文字を９つ挿入
-        p = str(self.data).replace('\n', '\n' + ' ' * 9)
-        return 'variable(' + p + ')'
+        p = str(self.data).replace("\n", "\n" + " " * 9)
+        return "variable(" + p + ")"
 
     def set_creator(self, func):
         self.creator = func
@@ -85,7 +80,9 @@ class Variable:
     def backward(self, retain_grad=False, create_graph=False):
         if self.grad is None:
             # self.grad = np.ones_like(self.data)
-            self.grad = Variable(np.ones_like(self.data)) # self.grad to Variable instance
+            self.grad = Variable(
+                np.ones_like(self.data)
+            )  # self.grad to Variable instance
 
         funcs = []
         seen_set = set()
@@ -98,10 +95,10 @@ class Variable:
         add_func(self.creator)
 
         while funcs:
-            f = funcs.pop(funcs.index(max(funcs, key=lambda x:x.generation)))
+            f = funcs.pop(funcs.index(max(funcs, key=lambda x: x.generation)))
             gys = [output().grad for output in f.outputs]  # output is weakref
-            
-            with using_config('enable_backprop', create_graph):
+
+            with using_config("enable_backprop", create_graph):
                 gxs = f.backward(*gys)
                 if not isinstance(gxs, tuple):
                     gxs = (gxs,)
@@ -118,7 +115,25 @@ class Variable:
             if not retain_grad:
                 for y in f.outputs:
                     y().grad = None  # y is weakref
-                    
+
+    def reshape(self, *shape):
+        if len(shape) == 1 and isinstance(shape[0], (tuple, list)):
+            shape = shape[0]
+        return leopard.functions.reshape(self, shape)  # 循環インポートを避けるためF.reshapeのようにしない
+
+    def transpose(self, *axes):
+        if len(axes) == 0:
+            axes = None
+        elif len(axes) == 1:
+            if isinstance(axes[0], (tuple, list)) or axes[0] is None:
+                axes = axes[0]
+        return leopard.functions.transpose(self, axes)
+
+    @property
+    def T(self):
+        return leopard.functions.transpose(self)
+
+
 def as_variable(obj):
     if isinstance(obj, Variable):
         return obj
@@ -129,6 +144,7 @@ def as_array(x):
     if np.isscalar(x):
         return np.array(x)
     return x
+
 
 class Function:
     def __call__(self, *inputs):
@@ -154,7 +170,8 @@ class Function:
 
     def backward(self, gys):
         raise NotImplementedError()
-    
+
+
 # =============================================================================
 # 四則演算 / 演算子のオーバーロード
 # =============================================================================
@@ -227,7 +244,7 @@ class Div(Function):
     def backward(self, gy):
         x0, x1 = self.inputs
         gx0 = gy / x1
-        gx1 = gy * (-x0 / x1 ** 2)
+        gx1 = gy * (-x0 / x1**2)
         return gx0, gx1
 
 
@@ -246,11 +263,11 @@ class Pow(Function):
         self.c = c
 
     def forward(self, x):
-        y = x ** self.c
+        y = x**self.c
         return y
 
     def backward(self, gy):
-        x, = self.inputs
+        (x,) = self.inputs
         c = self.c
 
         gx = c * x ** (c - 1) * gy
