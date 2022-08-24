@@ -133,6 +133,9 @@ class Variable:
     def T(self):
         return leopard.functions.transpose(self)
 
+    def sum(self, axis=None, keepdims=False):
+        return leopard.functions.sum(self, axis, keepdims)
+
 
 def as_variable(obj):
     if isinstance(obj, Variable):
