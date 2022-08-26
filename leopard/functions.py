@@ -207,3 +207,31 @@ class MatMul(Function):
 
 def matmul(x, W):
     return MatMul()(x, W)
+
+
+# =============================================================================
+# loss function: mean_squared_error / softmax_cross_entropy / sigmoid_cross_entropy / binary_cross_entropy
+# =============================================================================
+def mean_squared_error_simple(x0, x1):
+    x0, x1 = as_variable(x0), as_variable(x1)
+    diff = x0 - x1
+    y = sum(diff**2) / len(diff)
+    return y
+
+
+class MeanSquaredError(Function):
+    def forward(self, x0, x1):
+        diff = x0 - x1
+        y = (diff**2).sum() / len(diff)
+        return y
+
+    def backward(self, gy):
+        x0, x1 = self.inputs
+        diff = x0 - x1
+        gx0 = gy * diff * (2.0 / len(diff))
+        gx1 = -gx0
+        return gx0, gx1
+
+
+def mean_squared_error(x0, x1):
+    return MeanSquaredError()(x0, x1)
