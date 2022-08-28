@@ -295,7 +295,7 @@ class Sigmoid(Function):
         return y
 
     def backward(self, gy):
-        y = self.outputs[0]()
+        y = self.outputs[0]()  # weakref
         gx = gy * y * (1 - y)
         return gx
 

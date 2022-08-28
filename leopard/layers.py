@@ -20,8 +20,8 @@ class Layer:
         outputs = self.forward(*inputs)
         if not isinstance(outputs, tuple):
             outputs = (outputs,)
-        self.inputs = [weakref.ref(x) for x in inputs]
-        self.outputs = [weakref.ref(y) for y in outputs]
+        self.inputs = [weakref.ref(input) for input in inputs]
+        self.outputs = [weakref.ref(output) for output in outputs]
         return outputs if len(outputs) > 1 else outputs[0]
 
     def forward(self, inputs):

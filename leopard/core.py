@@ -117,18 +117,18 @@ class Variable:
                 if not isinstance(gxs, tuple):
                     gxs = (gxs,)
 
-                for x, gx in zip(f.inputs, gxs):
-                    if x.grad is None:
-                        x.grad = gx
+                for input, gx in zip(f.inputs, gxs):
+                    if input.grad is None:
+                        input.grad = gx
                     else:
-                        x.grad = x.grad + gx
+                        input.grad = input.grad + gx
 
-                    if x.creator is not None:
-                        add_func(x.creator)
+                    if input.creator is not None:
+                        add_func(input.creator)
 
             if not retain_grad:
-                for y in f.outputs:
-                    y().grad = None  # y is weakref
+                for output in f.outputs:
+                    output().grad = None  # y is weakref
 
     def reshape(self, *shape):
         if len(shape) == 1 and isinstance(shape[0], (tuple, list)):
@@ -177,16 +177,16 @@ def as_array(x, array_module=np):
 
 class Function:
     def __call__(self, *inputs):
-        inputs = [as_variable(x) for x in inputs]
+        inputs = [as_variable(input) for input in inputs]
 
-        xs = [x.data for x in inputs]
+        xs = [input.data for input in inputs]
         ys = self.forward(*xs)
         if not isinstance(ys, tuple):
             ys = (ys,)
         outputs = [Variable(as_array(y)) for y in ys]
 
         if Config.enable_backprop:
-            self.generation = max([x.generation for x in inputs])
+            self.generation = max([input.generation for input in inputs])
             for output in outputs:
                 output.set_creator(self)
             self.inputs = inputs

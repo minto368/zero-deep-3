@@ -7,7 +7,8 @@ import contextlib
 # =============================================================================
 class Config:
     enable_backprop = True
-    
+
+
 @contextlib.contextmanager
 def using_config(name, value):
     old_value = getattr(Config, name)
@@ -19,18 +20,19 @@ def using_config(name, value):
 
 
 def no_grad():
-    return using_config('enable_backprop', False)
+    return using_config("enable_backprop", False)
+
 
 # =============================================================================
 # Variable / Function
 # =============================================================================
 class Variable:
-    __array_priority__ = 200 # 演算子の優先度を上げる
+    __array_priority__ = 200  # 演算子の優先度を上げる
 
     def __init__(self, data, name=None):
         if data is not None:
             if not isinstance(data, np.ndarray):
-                raise TypeError('{} is not supported'.format(type(data)))
+                raise TypeError("{} is not supported".format(type(data)))
 
         self.data = data
         self.name = name
@@ -59,9 +61,9 @@ class Variable:
 
     def __repr__(self):
         if self.data is None:
-            return 'variable(None)'
-        p = str(self.data).replace('\n', '\n' + ' ' * 9)
-        return 'variable(' + p + ')'
+            return "variable(None)"
+        p = str(self.data).replace("\n", "\n" + " " * 9)
+        return "variable(" + p + ")"
 
     def set_creator(self, func):
         self.creator = func
@@ -85,25 +87,26 @@ class Variable:
         add_func(self.creator)
 
         while funcs:
-            f = funcs.pop(funcs.index(max(funcs, key=lambda x:x.generation)))
+            f = funcs.pop(funcs.index(max(funcs, key=lambda x: x.generation)))
             gys = [output().grad for output in f.outputs]  # output is weakref
             gxs = f.backward(*gys)
             if not isinstance(gxs, tuple):
                 gxs = (gxs,)
 
-            for x, gx in zip(f.inputs, gxs):
-                if x.grad is None:
-                    x.grad = gx
+            for input, gx in zip(f.inputs, gxs):
+                if input.grad is None:
+                    input.grad = gx
                 else:
-                    x.grad = x.grad + gx
+                    input.grad = input.grad + gx
 
-                if x.creator is not None:
-                    add_func(x.creator)
+                if input.creator is not None:
+                    add_func(input.creator)
 
             if not retain_grad:
-                for y in f.outputs:
-                    y().grad = None  # y is weakref
-                    
+                for output in f.outputs:
+                    output().grad = None  # y is weakref
+
+
 def as_variable(obj):
     if isinstance(obj, Variable):
         return obj
@@ -115,18 +118,19 @@ def as_array(x):
         return np.array(x)
     return x
 
+
 class Function:
     def __call__(self, *inputs):
-        inputs = [as_variable(x) for x in inputs]
+        inputs = [as_variable(input) for input in inputs]
 
-        xs = [x.data for x in inputs]
+        xs = [input.data for input in inputs]
         ys = self.forward(*xs)
         if not isinstance(ys, tuple):
             ys = (ys,)
         outputs = [Variable(as_array(y)) for y in ys]
 
         if Config.enable_backprop:
-            self.generation = max([x.generation for x in inputs])
+            self.generation = max([input.generation for input in inputs])
             for output in outputs:
                 output.set_creator(self)
             self.inputs = inputs
@@ -139,7 +143,8 @@ class Function:
 
     def backward(self, gys):
         raise NotImplementedError()
-    
+
+
 # =============================================================================
 # 四則演算 / 演算子のオーバーロード
 # =============================================================================
@@ -211,7 +216,7 @@ class Div(Function):
     def backward(self, gy):
         x0, x1 = self.inputs[0].data, self.inputs[1].data
         gx0 = gy / x1
-        gx1 = gy * (-x0 / x1 ** 2)
+        gx1 = gy * (-x0 / x1**2)
         return gx0, gx1
 
 
@@ -230,7 +235,7 @@ class Pow(Function):
         self.c = c
 
     def forward(self, x):
-        y = x ** self.c
+        y = x**self.c
         return y
 
     def backward(self, gy):

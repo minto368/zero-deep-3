@@ -17,7 +17,7 @@ class Optimizer:
 
     def update(self):
         # None以外のパラメータをリストにまとめる
-        params = [p for p in self.target.params() if p.grad is not None]
+        params = [param for param in self.target.params() if param.grad is not None]
 
         # 前処理（オプション）
         for f in self.hooks:
