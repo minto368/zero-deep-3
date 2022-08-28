@@ -29,11 +29,13 @@ else:
 
     from leopard.models import Model
 
-    # from leopard.datasets import Dataset
+    from leopard.datasets import Dataset
+
     # from leopard.dataloaders import DataLoader
     # from leopard.dataloaders import SeqDataLoader
 
-    # import leopard.datasets
+    import leopard.datasets
+
     # import leopard.dataloaders
     # import leopard.optimizers
     # import leopard.functions

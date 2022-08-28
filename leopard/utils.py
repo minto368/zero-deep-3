@@ -62,12 +62,12 @@ def reshape_sum_backward(gy, x_shape, axis, keepdims):
 
 
 def logsumexp(x, axis=1):
-    xp = cuda.get_array_module(x)
+    # xp = cuda.get_array_module(x)
     m = x.max(axis=axis, keepdims=True)
     y = x - m
-    xp.exp(y, out=y)
+    np.exp(y, out=y)
     s = y.sum(axis=axis, keepdims=True)
-    xp.log(s, out=s)
+    np.log(s, out=s)
     m += s
     return m
 
