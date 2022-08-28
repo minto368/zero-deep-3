@@ -8,6 +8,8 @@
 - numpy 1.20.3
 - matplotlib 3.5.1
 - memory-profiler 0.60.0
+- cupy 8.6.0
+- Pillow 8.3.1
 
 ## 公式リポジトリ
 https://github.com/oreilly-japan/deep-learning-from-scratch-3
@@ -27,3 +29,4 @@ https://github.com/oreilly-japan/deep-learning-from-scratch-3
 |[stage3-2.ipynb](/stage3-2.ipynb)|pp.217-265|ステップ30~ステップ36|
 |[stage4-1.ipynb](/stage4-1.ipynb)|pp.269-334|ステップ37~ステップ43|
 |[stage4-2.ipynb](/stage4-2.ipynb)|pp.335-408|ステップ44~ステップ51|
+|[stage5.ipynb](/stage5.ipynb)|pp.411-496|ステップ52~ステップ60|
