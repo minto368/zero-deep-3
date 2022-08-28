@@ -31,21 +31,23 @@ else:
 
     from leopard.datasets import Dataset
 
-    # from leopard.dataloaders import DataLoader
+    from leopard.dataloaders import DataLoader
+
     # from leopard.dataloaders import SeqDataLoader
 
     import leopard.datasets
 
-    # import leopard.dataloaders
-    # import leopard.optimizers
-    # import leopard.functions
+    import leopard.dataloaders
+    import leopard.optimizers
+    import leopard.functions
+
     # import leopard.functions_conv
     import leopard.layers
 
     import leopard.utils
 
     # import leopard.cuda
-    # import leopard.transforms
+    import leopard.transforms
 
 setup_variable()
 __version__ = "0.0.13"
