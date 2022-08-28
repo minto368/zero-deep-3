@@ -19,7 +19,7 @@ else:
     from leopard.core import using_config
     from leopard.core import no_grad
 
-    # from leopard.core import test_mode
+    from leopard.core import test_mode
     from leopard.core import as_array
     from leopard.core import as_variable
     from leopard.core import setup_variable
