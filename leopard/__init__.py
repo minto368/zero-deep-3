@@ -46,7 +46,7 @@ else:
 
     import leopard.utils
 
-    # import leopard.cuda
+    import leopard.cuda
     import leopard.transforms
 
 setup_variable()

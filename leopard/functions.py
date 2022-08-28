@@ -1,6 +1,6 @@
 import numpy as np
 import leopard
-from leopard import utils
+from leopard import utils, cuda
 from leopard.core import Function, Variable, as_variable, as_array
 
 # =============================================================================
@@ -8,8 +8,8 @@ from leopard.core import Function, Variable, as_variable, as_array
 # =============================================================================
 class Sin(Function):
     def forward(self, x):
-        # xp = cuda.get_array_module(x)
-        y = np.sin(x)
+        xp = cuda.get_array_module(x)
+        y = xp.sin(x)
         return y
 
     def backward(self, gy):
@@ -24,8 +24,8 @@ def sin(x):
 
 class Cos(Function):
     def forward(self, x):
-        # xp = cuda.get_array_module(x)
-        y = np.cos(x)
+        xp = cuda.get_array_module(x)
+        y = xp.cos(x)
         return y
 
     def backward(self, gy):
@@ -40,8 +40,8 @@ def cos(x):
 
 class Tanh(Function):
     def forward(self, x):
-        # xp = cuda.get_array_module(x)
-        y = np.tanh(x)
+        xp = cuda.get_array_module(x)
+        y = xp.tanh(x)
         return y
 
     def backward(self, gy):
@@ -56,8 +56,8 @@ def tanh(x):
 
 class Exp(Function):
     def forward(self, x):
-        # xp = cuda.get_array_module(x)
-        y = np.exp(x)
+        xp = cuda.get_array_module(x)
+        y = xp.exp(x)
         return y
 
     def backward(self, gy):
@@ -72,8 +72,8 @@ def exp(x):
 
 class Log(Function):
     def forward(self, x):
-        # xp = cuda.get_array_module(x)
-        y = np.log(x)
+        xp = cuda.get_array_module(x)
+        y = xp.log(x)
         return y
 
     def backward(self, gy):
@@ -150,14 +150,14 @@ class GetItemGrad(Function):
 
     def forward(self, gy):
         # GetItemGradの順伝播が、GetItemの逆伝播に対応する
-        # xp = dezero.cuda.get_array_module(gy)
-        gx = np.zeros(self.in_shape, dtype=gy.dtype)
+        xp = leopard.cuda.get_array_module(gy)
+        gx = xp.zeros(self.in_shape, dtype=gy.dtype)
 
         # sliceした場所のみ勾配を加算する
-        # if xp is np:
-        np.add.at(gx, self.slices, gy)
-        # else:
-        #    xp.scatter_add(gx, self.slices, gy)
+        if xp is np:
+            np.add.at(gx, self.slices, gy)
+        else:
+            xp.scatter_add(gx, self.slices, gy)
         return gx
 
     def backward(self, ggx):
@@ -218,8 +218,8 @@ class BroadcastTo(Function):
 
     def forward(self, x):
         self.x_shape = x.shape
-        # xp = leopard.cuda.get_array_module(x)
-        y = np.broadcast_to(x, self.shape)
+        xp = leopard.cuda.get_array_module(x)
+        y = xp.broadcast_to(x, self.shape)
         return y
 
     def backward(self, gy):
@@ -289,9 +289,9 @@ def sigmoid_simple(x):
 
 class Sigmoid(Function):
     def forward(self, x):
-        # xp = cuda.get_array_module(x)
+        xp = cuda.get_array_module(x)
         # y = 1 / (1 + xp.exp(-x))
-        y = np.tanh(x * 0.5) * 0.5 + 0.5  # Better implementation
+        y = xp.tanh(x * 0.5) * 0.5 + 0.5  # Better implementation
         return y
 
     def backward(self, gy):
@@ -306,8 +306,8 @@ def sigmoid(x):
 
 class ReLU(Function):
     def forward(self, x):
-        # xp = cuda.get_array_module(x)
-        y = np.maximum(x, 0.0)
+        xp = cuda.get_array_module(x)
+        y = xp.maximum(x, 0.0)
         return y
 
     def backward(self, gy):
@@ -335,9 +335,9 @@ class Softmax(Function):
         self.axis = axis
 
     def forward(self, x):
-        # xp = cuda.get_array_module(x)
+        xp = cuda.get_array_module(x)
         y = x - x.max(axis=self.axis, keepdims=True)
-        y = np.exp(y)
+        y = xp.exp(y)
         y /= y.sum(axis=self.axis, keepdims=True)
         return y
 
@@ -427,8 +427,8 @@ class SoftmaxCrossEntropy(Function):
         gy *= 1 / N
         y = softmax(x)
         # convert to one-hot
-        # xp = cuda.get_array_module(t.data)
-        t_onehot = np.eye(CLS_NUM, dtype=t.dtype)[t.data]
+        xp = cuda.get_array_module(t.data)
+        t_onehot = xp.eye(CLS_NUM, dtype=t.dtype)[t.data]
         y = (y - t_onehot) * gy
         return y
 
@@ -518,8 +518,8 @@ class Clip(Function):
         self.x_max = x_max
 
     def forward(self, x):
-        # xp = cuda.get_array_module(x)
-        y = np.clip(x, self.x_min, self.x_max)
+        xp = cuda.get_array_module(x)
+        y = xp.clip(x, self.x_min, self.x_max)
         return y
 
     def backward(self, gy):

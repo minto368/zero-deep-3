@@ -3,6 +3,7 @@ import weakref
 
 import numpy as np
 from leopard.core import Parameter
+from leopard import cuda
 import leopard.functions as F
 
 
@@ -40,6 +41,14 @@ class Layer:
         for param in self.params():
             param.cleargrad()
 
+    def to_cpu(self):
+        for param in self.params():
+            param.to_cpu()
+
+    def to_gpu(self):
+        for param in self.params():
+            param.to_gpu()
+
 
 # =============================================================================
 # Linear / Conv2d / Deconv2d
@@ -62,15 +71,15 @@ class Linear(Layer):
 
     def _init_W(self, xp=np):
         I, O = self.in_size, self.out_size
-        W_data = np.random.randn(I, O).astype(self.dtype) * np.sqrt(1 / I)
+        W_data = xp.random.randn(I, O).astype(self.dtype) * np.sqrt(1 / I)
         self.W.data = W_data
 
     def forward(self, x):
         # データを流すタイミングで重みを初期化
         if self.W.data is None:
             self.in_size = x.shape[1]
-            # xp = cuda.get_array_module(x)
-            self._init_W(x)
+            xp = cuda.get_array_module(x)
+            self._init_W(xp)
 
         y = F.linear(x, self.W, self.b)
         return y
