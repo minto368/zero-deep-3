@@ -13,7 +13,7 @@ class Sin(Function):
         return y
 
     def backward(self, gy):
-        (x,) = self.inputs
+        (x,) = self.inputs  # weakref
         gx = gy * cos(x)
         return gx
 
@@ -29,7 +29,7 @@ class Cos(Function):
         return y
 
     def backward(self, gy):
-        (x,) = self.inputs
+        (x,) = self.inputs  # weakref
         gx = gy * -sin(x)
         return gx
 
@@ -77,7 +77,7 @@ class Log(Function):
         return y
 
     def backward(self, gy):
-        (x,) = self.inputs
+        (x,) = self.inputs  # weakref
         gx = gy / x
         return gx
 
@@ -138,7 +138,7 @@ class GetItem(Function):
         return y
 
     def backward(self, gy):
-        (x,) = self.inputs
+        (x,) = self.inputs  # weakref
         f = GetItemGrad(self.slices, x.shape)
         return f(gy)
 
@@ -233,6 +233,15 @@ def broadcast_to(x, shape):
     return BroadcastTo(shape)(x)
 
 
+def average(x, axis=None, keepdims=False):
+    x = as_variable(x)
+    y = sum(x, axis, keepdims)
+    return y * (y.data.size / x.data.size)
+
+
+mean = average
+
+
 class MatMul(Function):
     def forward(self, x, W):
         y = x.dot(W)
@@ -313,7 +322,7 @@ class ReLU(Function):
     def backward(self, gy):
         # xが0より大きい要素の場所の勾配はそのまま流す。
         # それ以外は0にする。
-        (x,) = self.inputs
+        (x,) = self.inputs  # weakref
         mask = x.data > 0
         gx = gy * mask
         return gx
@@ -342,7 +351,7 @@ class Softmax(Function):
         return y
 
     def backward(self, gy):
-        y = self.outputs[0]()
+        y = self.outputs[0]()  # weakref
         gx = y * gy
         sumdx = gx.sum(axis=self.axis, keepdims=True)
         gx -= y * sumdx
@@ -363,7 +372,7 @@ class LogSoftmax(Function):
         return y
 
     def backward(self, gy):
-        y = self.outputs[0]()
+        y = self.outputs[0]()  # weakref
         gx = gy - exp(y) * gy.sum(axis=self.axis, keepdims=True)
         return gx
 
@@ -544,3 +553,26 @@ class Clip(Function):
 
 def clip(x, x_min, x_max):
     return Clip(x_min, x_max)(x)
+
+
+# =============================================================================
+# conv2d / col2im / im2col / basic_math
+# =============================================================================
+"""
+from leopard.functions_conv import conv2d
+from leopard.functions_conv import deconv2d
+from leopard.functions_conv import conv2d_simple
+from leopard.functions_conv import im2col
+from leopard.functions_conv import col2im
+from leopard.functions_conv import pooling_simple
+from leopard.functions_conv import pooling
+from leopard.functions_conv import average_pooling
+"""
+
+from leopard.core import add
+from leopard.core import sub
+from leopard.core import rsub
+from leopard.core import mul
+from leopard.core import div
+from leopard.core import neg
+from leopard.core import pow
