@@ -87,6 +87,10 @@ class Variable:
         self.creator = func
         self.generation = func.generation + 1
 
+    def unchain(self):
+        # 「つながり」を断つため関数を消去する
+        self.creator = None
+
     def cleargrad(self):
         self.grad = None
 
@@ -129,6 +133,17 @@ class Variable:
             if not retain_grad:
                 for output in f.outputs:
                     output().grad = None  # y is weakref
+
+    def unchain_backward(self):
+        # 全ての変数のunchainメソッドを呼ぶ
+        if self.creator is not None:
+            funcs = [self.creator]
+            while funcs:
+                f = funcs.pop()
+                for input in f.inputs:
+                    if input.creator is not None:
+                        funcs.append(input.creator)
+                        input.unchain()
 
     def reshape(self, *shape):
         if len(shape) == 1 and isinstance(shape[0], (tuple, list)):
